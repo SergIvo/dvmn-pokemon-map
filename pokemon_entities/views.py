@@ -93,6 +93,13 @@ def show_pokemon(request, pokemon_id):
             'img_url': request.build_absolute_uri(requested_pokemon.previous_form.image.url),
             'title_ru': requested_pokemon.previous_form.title
         }
+    next_form = requested_pokemon.next_form.first()
+    if next_form:
+        pokemon['next_evolution'] = {
+            'pokemon_id': next_form.id,
+            'img_url': request.build_absolute_uri(next_form.image.url),
+            'title_ru': next_form.title
+        }
     return render(request, 'pokemon.html', context={
         'map': folium_map._repr_html_(), 'pokemon': pokemon
     })

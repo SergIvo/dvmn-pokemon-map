@@ -8,7 +8,13 @@ class Pokemon(models.Model):
     description = models.TextField()
     title_en = models.CharField(max_length=200)
     title_jp = models.CharField(max_length=200)
-    previous_form = models.ForeignKey('Pokemon', blank=True, null=True, on_delete=models.DO_NOTHING)
+    previous_form = models.ForeignKey(
+        'Pokemon',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='next_form'
+    )
 
     def __str__(self):
         return self.title
