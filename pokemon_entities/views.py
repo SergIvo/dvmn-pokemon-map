@@ -33,27 +33,22 @@ def show_all_pokemons(request):
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     current_datetime = timezone.localtime()
     for pokemon in Pokemon.objects.all():
-        if pokemon.image:
-            for pokemon_entity in PokemonEntity.objects.filter(
-                pokemon=pokemon,
-                appeared_at__lte=current_datetime,
-                disappeared_at__gte=current_datetime
-            ):
-                add_pokemon(
-                    folium_map, pokemon_entity.latitude,
-                    pokemon_entity.longitude,
-                    request.build_absolute_uri(pokemon.image.url)
-                )
+        for pokemon_entity in PokemonEntity.objects.filter(
+            pokemon=pokemon,
+            appeared_at__lte=current_datetime,
+            disappeared_at__gte=current_datetime
+        ):
+            add_pokemon(
+                folium_map, pokemon_entity.latitude,
+                pokemon_entity.longitude,
+                request.build_absolute_uri(pokemon.image.url)
+            )
 
     pokemons_on_page = []
     for pokemon in Pokemon.objects.all():
-        if pokemon.image:
-            pokemon_image_url = request.build_absolute_uri(pokemon.image.url)
-        else:
-            pokemon_image_url = None
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
-            'img_url': pokemon_image_url,
+            'img_url': request.build_absolute_uri(pokemon.image.url),
             'title_ru': pokemon.title,
         })
 
@@ -64,9 +59,6 @@ def show_all_pokemons(request):
 
 
 def show_pokemon(request, pokemon_id):
-    with open('pokemon_entities/pokemons.json', encoding='utf-8') as database:
-        pokemons = json.load(database)['pokemons']
-
     try:
         requested_pokemon = Pokemon.objects.get(id=pokemon_id)
     except ObjectDoesNotExist:
