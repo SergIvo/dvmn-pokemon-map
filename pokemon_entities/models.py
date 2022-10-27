@@ -4,8 +4,8 @@ from django.utils import timezone
 
 class Pokemon(models.Model):
     title = models.CharField(verbose_name='Название', max_length=200)
-    image = models.ImageField(verbose_name='Изображение', blank=True, null=True)
-    description = models.TextField(verbose_name='Описание',)
+    image = models.ImageField(verbose_name='Изображение')
+    description = models.TextField(verbose_name='Описание')
     title_en = models.CharField(verbose_name='Название на английском языке', max_length=200)
     title_jp = models.CharField(verbose_name='Название на японском языке', max_length=200)
     previous_form = models.ForeignKey(
@@ -21,15 +21,15 @@ class Pokemon(models.Model):
         return self.title
 
 class PokemonEntity(models.Model):
-    latitude = models.FloatField(verbose_name='Широта', null=False)
-    longitude = models.FloatField(verbose_name='Долгота', null=False)
+    latitude = models.FloatField(verbose_name='Широта')
+    longitude = models.FloatField(verbose_name='Долгота')
     pokemon = models.ForeignKey(Pokemon, verbose_name='Покемон', on_delete=models.CASCADE)
 
     appeared_at = models.DateTimeField(verbose_name='Время появления', default=timezone.now)
     disappeared_at = models.DateTimeField(verbose_name='Время исчезновения', default=timezone.now)
 
-    level = models.IntegerField(verbose_name='Уровень')
-    health = models.IntegerField(verbose_name='Здоровье')
-    strength = models.IntegerField(verbose_name='Сила')
-    defence = models.IntegerField(verbose_name='Защита')
-    stamina = models.IntegerField(verbose_name='Выносливость')
+    level = models.IntegerField(verbose_name='Уровень', null=True, blank=True)
+    health = models.IntegerField(verbose_name='Здоровье', null=True, blank=True)
+    strength = models.IntegerField(verbose_name='Сила', null=True, blank=True)
+    defence = models.IntegerField(verbose_name='Защита', null=True, blank=True)
+    stamina = models.IntegerField(verbose_name='Выносливость', null=True, blank=True)
