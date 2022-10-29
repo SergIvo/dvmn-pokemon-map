@@ -4,10 +4,19 @@ from django.utils import timezone
 
 class Pokemon(models.Model):
     title = models.CharField(verbose_name='Название', max_length=200)
-    image = models.ImageField(verbose_name='Изображение')
-    description = models.TextField(verbose_name='Описание')
-    title_en = models.CharField(verbose_name='Название на английском языке', max_length=200)
-    title_jp = models.CharField(verbose_name='Название на японском языке', max_length=200)
+    image = models.ImageField(verbose_name='Изображение', blank=True, null=True)
+    description = models.TextField(verbose_name='Описание', blank=True, null=True)
+    title_en = models.CharField(
+        verbose_name='Название на английском языке',
+        max_length=200,
+        blank=True,
+        null=True
+    )
+    title_jp = models.CharField(
+        verbose_name='Название на японском языке',
+        max_length=200,
+        blank=True,
+        null=True)
     previous_form = models.ForeignKey(
         'Pokemon',
         verbose_name='Предыдущая ступень эволюции',
