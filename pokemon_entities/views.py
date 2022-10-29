@@ -76,19 +76,28 @@ def show_pokemon(request, pokemon_id):
 
     folium_map = folium.Map(location=MOSCOW_CENTER, zoom_start=12)
     for pokemon_entity in PokemonEntity.objects.filter(pokemon=requested_pokemon):
-        add_pokemon(
-            folium_map, pokemon_entity.latitude,
-            pokemon_entity.longitude,
-            request.build_absolute_uri(requested_pokemon.image.url)
-        )
+        if requested_pokemon.image:
+            add_pokemon(
+                folium_map, pokemon_entity.latitude,
+                pokemon_entity.longitude,
+                request.build_absolute_uri(requested_pokemon.image.url)
+            )
+        else:
+            add_pokemon(
+                folium_map, pokemon_entity.latitude,
+                pokemon_entity.longitude,
+            )
 
     pokemon = {
         'title_ru': requested_pokemon.title,
-        'img_url': request.build_absolute_uri(requested_pokemon.image.url),
         'title_en': requested_pokemon.title_en,
         'title_jp': requested_pokemon.title_jp,
         'description': requested_pokemon.description,
     }
+    if requested_pokemon.image:
+        pokemon['img_url'] = request.build_absolute_uri(requested_pokemon.image.url)
+    else:
+        pokemon['img_url'] = DEFAULT_IMAGE_URL
     if requested_pokemon.previous_form:
         pokemon['previous_evolution'] = {
             'pokemon_id': requested_pokemon.previous_form.id,
