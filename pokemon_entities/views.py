@@ -38,17 +38,27 @@ def show_all_pokemons(request):
             appeared_at__lte=current_datetime,
             disappeared_at__gte=current_datetime
         ):
-            add_pokemon(
-                folium_map, pokemon_entity.latitude,
-                pokemon_entity.longitude,
-                request.build_absolute_uri(pokemon.image.url)
-            )
+            if pokemon.image:
+                add_pokemon(
+                    folium_map, pokemon_entity.latitude,
+                    pokemon_entity.longitude,
+                    request.build_absolute_uri(pokemon.image.url)
+                )
+            else:
+                add_pokemon(
+                    folium_map, pokemon_entity.latitude,
+                    pokemon_entity.longitude,
+                )
 
     pokemons_on_page = []
     for pokemon in Pokemon.objects.all():
+        if pokemon.image:
+            pokemon_image_uri = request.build_absolute_uri(pokemon.image.url)
+        else:
+            pokemon_image_uri = DEFAULT_IMAGE_URL
         pokemons_on_page.append({
             'pokemon_id': pokemon.id,
-            'img_url': request.build_absolute_uri(pokemon.image.url),
+            'img_url': pokemon_image_uri,
             'title_ru': pokemon.title,
         })
 
